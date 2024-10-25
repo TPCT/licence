@@ -1,0 +1,6 @@
+[23-Mar-2023 11:31:10 UTC] PHP Warning:  Module 'sodium' already loaded in Unknown on line 0
+[23-Mar-2023 11:31:10 UTC] PHP Fatal error:  Composer detected issues in your platform: Your Composer dependencies require a PHP version ">= 8.1.0". You are running 7.4.33. in /home/galeleos/public_html/licence.threearrows-eg.com/vendor/composer/platform_check.php on line 24
+[23-Mar-2023 11:31:44 UTC] PHP Warning:  Module 'sodium' already loaded in Unknown on line 0
+[23-Mar-2023 11:31:44 UTC] PHP Fatal error:  Composer detected issues in your platform: Your Composer dependencies require a PHP version ">= 8.1.0". You are running 7.4.33. in /home/galeleos/public_html/licence.threearrows-eg.com/vendor/composer/platform_check.php on line 24
+[23-Mar-2023 11:32:47 UTC] PHP Warning:  Module 'sodium' already loaded in Unknown on line 0
+[23-Mar-2023 11:32:47 UTC] PHP Fatal error:  Composer detected issues in your platform: Your Composer dependencies require a PHP version ">= 8.1.0". You are running 7.4.33. in /home/galeleos/public_html/licence.threearrows-eg.com/vendor/composer/platform_check.php on line 24
