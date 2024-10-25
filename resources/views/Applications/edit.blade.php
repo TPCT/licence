@@ -9,15 +9,15 @@
                 <form id="update_form" method="post" class="w-100" action="{{route('licence-users.servers.applications.update', ['licence_user' => $user, 'server' => $server->id, 'application' => $application])}}">
                     @csrf
                     @method('PUT')
-                    <div class="form-group mb-3">
-                        <label for="exampleFormControlTextarea1">Application Message</label>
-                        <textarea class="form-control" name="message" id="exampleFormControlTextarea1" rows="3">{{$application->pivot->message}}</textarea>
-                    </div>
-                    <div class="form-check">
-                        <input class="form-check-input" name="show_message" type="checkbox" value="1" id="defaultCheck1" {{$application->pivot->show_message ? "checked='checked'" : ""}}">
-                        <label class="form-check-label" for="defaultCheck1">
-                            Show Message
-                        </label>
+                    <div class="d-flex flex-wrap justify-content-between">
+                        <div class="form-group mb-3">
+                            <label for="start-date">Start Date</label>
+                            <input value="{{\Carbon\Carbon::createFromFormat('Y-m-d H:i:s', $application->pivot->end_date)->toDateString()}}" class="form-control" type="date" name="start_date" id="start-date">
+                        </div>
+                        <div class="form-group mb-3">
+                            <label for="end-date">End Date</label>
+                            <input value="{{\Carbon\Carbon::createFromFormat('Y-m-d H:i:s', $application->pivot->end_date)->toDateString()}}" class="form-control" type="date" name="end_date" id="end-date">
+                        </div>
                     </div>
                 </form>
             </div>

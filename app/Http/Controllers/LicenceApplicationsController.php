@@ -61,9 +61,10 @@ class LicenceApplicationsController extends Controller
                 ->with('message', ['message' => "Application doesn't belong to the user", "type" => "danger"]);
 
         $data = $request->validate([
-            'message' => 'required|string',
-            'show_message' => 'sometimes|boolean'
+            'start_date' => 'required|date',
+            'end_date' => 'required|date|after:start_date'
         ]);
+
         $data['show_message'] = $data['show_message'] ?? false;
 
         $application->pivot->update($data);

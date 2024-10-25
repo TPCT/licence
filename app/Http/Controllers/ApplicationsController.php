@@ -69,7 +69,7 @@ class ApplicationsController extends Controller
 
         return response()->json([
             'message' => $application->pivot->message,
-            'show_message' => $application->pivot->show_message
+            'show_message' => true
         ]);
     }
 
@@ -103,8 +103,19 @@ class ApplicationsController extends Controller
     	if (!$application)
             return response()->json(['message' => 404], 404);
         $application = $server->applications()->find($application->id);
-    if (!$application || !$application->pivot->active)
-        return response()->json(['message' => 404], 404);
+
+        if (!$application || !$application->pivot->active)
+            return response()->json(['message' => 404], 404);
+
+        $application_end_date   = Carbon::createFromFormat('Y-m-d H:i:s', $application->pivot->end_date);
+        if ($application_end_date->diffInDays(Carbon::today()) <= 0) {
+            $server->applications()->sync([
+                $application->id => [
+                    'active' => false
+                ]
+            ], false);
+            return response()->json(['message' => 404], 404);
+        }
 
         return response()->json(['message' => 200]);
     }

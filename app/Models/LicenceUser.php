@@ -41,7 +41,7 @@ class LicenceUser extends Model
 
     public function applications(){
         return $this->belongsToMany(Application::class, 'server_applications')
-                    ->withPivot('active', 'licence_date', 'application_id', 'message', 'show_message')
+                    ->withPivot('active', 'licence_date', 'application_id', 'message', 'show_message', 'start_date', 'end_date')
                     ->wherePivot('active', true);
     }
 }

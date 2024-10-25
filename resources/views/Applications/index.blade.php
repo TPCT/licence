@@ -21,7 +21,8 @@
                                     <div class="d-flex flex-column col align-items-center justify-content-center">
                                         @if($user->active)
                                             <div class="d-flex justify-content-center align-items-center flex-column">
-                                                <span class="badge bg-warning">{{$application->pivot->licence_date}}</span>
+                                                <span class="badge bg-warning">{{\Carbon\Carbon::createFromFormat('Y-m-d H:i:s', $application->pivot->start_date)->toDateString()}} - {{\Carbon\Carbon::createFromFormat('Y-m-d H:i:s', $application->pivot->end_date)->toDateString()}}</span>
+                                                <span class="alert text-center alert-success p-1 mt-1">Remaining: {{\Carbon\Carbon::createFromFormat('Y-m-d H:i:s', $application->pivot->end_date)->diffInDays(\Carbon\Carbon::today())}} Days</span>
                                             </div>
                                         @else
                                             <div class="d-flex align-items-center mb-2">
