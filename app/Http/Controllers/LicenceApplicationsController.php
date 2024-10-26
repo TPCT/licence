@@ -61,7 +61,7 @@ class LicenceApplicationsController extends Controller
                 ->with('message', ['message' => "Application doesn't belong to the user", "type" => "danger"]);
 
         $data = $request->validate([
-            'start_date' => 'required|date',
+            'start_date' => 'required|date|after_or_equal:today',
             'end_date' => 'required|date|after:start_date'
         ]);
 
