@@ -107,8 +107,9 @@ class ApplicationsController extends Controller
         if (!$application || !$application->pivot->active)
             return response()->json(['message' => 404], 404);
 
+        $application_start_date = Carbon::createFromFormat('Y-m-d H:i:s', $application->pivot->start_date);
         $application_end_date   = Carbon::createFromFormat('Y-m-d H:i:s', $application->pivot->end_date);
-        if ($application_end_date->diffInDays(Carbon::today()) <= 0) {
+        if ($application_end_date->diffInDays(Carbon::today()) <= 0 || $application_start_date->diffInDays(Carbon::today()) > 0) {
             $server->applications()->sync([
                 $application->id => [
                     'active' => false
@@ -117,6 +118,11 @@ class ApplicationsController extends Controller
             return response()->json(['message' => 404], 404);
         }
 
-        return response()->json(['message' => 200]);
+        return response()->json([
+            'name' => $licence_user->username,
+            'start_date' => $application_start_date->toDateString(),
+            'end_date' => $application_end_date->toDateString(),
+            'message' => 200
+        ]);
     }
 }
