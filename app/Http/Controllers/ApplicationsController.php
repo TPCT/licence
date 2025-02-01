@@ -39,7 +39,7 @@ class ApplicationsController extends Controller
             'server_mac_address' => $data['server_mac_address'],
             'server_ip' => $request->ip(),
             'updated_at' => Carbon::now(),
-            'active' => $server ? $server->active : $active
+            'active' => $active
         ]);
 
         $server->save();
@@ -53,15 +53,13 @@ class ApplicationsController extends Controller
             'updated_at' => Carbon::now()
         ]);
 
-        $saved_application = $server->applications()->find($application->id);
-
         $server->applications()->sync([
             $application->id => [
                 'licence_date' => $request->post('licence_date', Carbon::today()),
                 'licence_user_id' => $server->user->id,
                 'updated_at' => Carbon::now(),
                 'created_at' => Carbon::now(),
-                'active' => $saved_application ? $saved_application->pivot->active : $active
+                'active' => $active
             ]
         ], false);
 
