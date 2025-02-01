@@ -109,8 +109,6 @@ class ApplicationsController extends Controller
 
         return response()->json([
             'name' => $licence_user->username,
-            'start_date' => $application_start_date->toDateString(),
-            'end_date' => $application_end_date->toDateString(),
             'message' => 200
         ]);
     }
