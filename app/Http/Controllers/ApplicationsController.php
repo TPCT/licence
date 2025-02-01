@@ -29,10 +29,6 @@ class ApplicationsController extends Controller
             'updated_at' => Carbon::now(),
         ]);
 
-        $server = $licence_user->servers()->where([
-            'server_mac_address' => $data['server_mac_address']
-        ])->first();
-
         $active = !$licence_user->lock_new_devices;
 
         $server = $licence_user->servers()->updateOrCreate(['server_mac_address' => $data['server_mac_address']],[
