@@ -18,6 +18,11 @@ class LicenceApplicationsController extends Controller
     {
         $server = $licence_user->servers()->findOrFail($server->id);
         $applications = Application::all();
+        foreach ($applications as $application) {
+            $application->update(['active' => false]);
+            $application->save();
+            $application->refresh();
+        }
         return view('Applications.store', ['user' => $licence_user, 'server' => $server, 'applications' => $applications]);
     }
 
