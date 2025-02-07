@@ -25,7 +25,7 @@
                                                 @if (\Carbon\Carbon::parse($application->pivot->end_date) > \Carbon\Carbon::today())
                                                     <span class="alert text-center alert-success p-1 mt-1">Remaining: {{\Carbon\Carbon::parse($application->pivot->end_date)->diffInDays(\Carbon\Carbon::today())}} Days</span>
                                                 @else
-                                                    <span class="alert text-center alert-danger p-1 mt-1">Remaining: 0 Days</span>
+                                                    <span class="alert text-center bg-danger p-1 mt-1">Remaining: 0 Days</span>
                                                 @endif
                                             </div>
                                         @else
@@ -52,8 +52,7 @@
                                                     data-application-id="{{$application->id}}"
                                                 >Edit</button>
                                                 @if (\Carbon\Carbon::parse($application->pivot->end_at) > \Carbon\Carbon::today())
-                                                    <button type="submit"
-                                                            class="btn @if($application->pivot->active) btn-warning @else btn-success ms-1 @endif me-2 status" form="toggle-status-{{$application->id}}">
+                                                    <button type="submit" class="btn @if($application->pivot->active) btn-warning @else btn-success ms-1 @endif me-2 status" form="toggle-status-{{$application->id}}">
                                                         @if ($application->pivot->active)
                                                             Disable
                                                         @else
