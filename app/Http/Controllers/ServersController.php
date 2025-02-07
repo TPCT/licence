@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\LicenceUser;
 use App\Models\Server;
+use Carbon\Carbon;
 use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Contracts\View\Factory;
 use Illuminate\Contracts\View\View;
@@ -41,6 +42,13 @@ class ServersController extends Controller
                 ->with('message', ['message' => "Server doesn't belong to the user", "type" => "danger"]);
 
         $applications = $server->applications()->paginate(10);
+        foreach ($applications as $application) {
+            if (Carbon::parse($application->pivot->end_date) < Carbon::today()) {
+                $application->pivot->update(['active' => false]);
+                $application->pivot->save();
+                $application->refresh();
+            }
+        }
         return view('Applications.index', [
             'user' => $licence_user,
             'server' => $server,
