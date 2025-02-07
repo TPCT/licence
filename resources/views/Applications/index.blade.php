@@ -22,7 +22,11 @@
                                         @if($user->active)
                                             <div class="d-flex justify-content-center align-items-center flex-column">
                                                 <span class="badge bg-warning">{{$application->pivot->start_date}} - {{$application->pivot->end_date}}</span>
-                                                <span class="alert text-center alert-success p-1 mt-1">Remaining: {{\Carbon\Carbon::parse($application->pivot->end_date)->diffForHumans(\Carbon\Carbon::today())}} Days</span>
+                                                @if (\Carbon\Carbon::parse($application->pivot->end_date) > \Carbon\Carbon::today())
+                                                    <span class="alert text-center alert-success p-1 mt-1">Remaining: {{\Carbon\Carbon::parse($application->pivot->end_date)->diffInDays(\Carbon\Carbon::today())}} Days</span>
+                                                @else
+                                                    <span class="alert text-center alert-danger p-1 mt-1">Remaining: 0 Days</span>
+                                                @endif
                                             </div>
                                         @else
                                             <div class="d-flex align-items-center mb-2">
