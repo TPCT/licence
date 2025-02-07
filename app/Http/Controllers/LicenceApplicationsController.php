@@ -19,9 +19,11 @@ class LicenceApplicationsController extends Controller
         $server = $licence_user->servers()->findOrFail($server->id);
         $applications = Application::all();
         foreach ($applications as $application) {
-            $application->update(['active' => false]);
-            $application->save();
-            $application->refresh();
+            if (Carbon::parse($application->pivot->end_date) > Carbon::today()) {
+                $application->pivot->update(['active' => false]);
+                $application->pivot->save();
+                $application->refresh();
+            }
         }
         return view('Applications.store', ['user' => $licence_user, 'server' => $server, 'applications' => $applications]);
     }
