@@ -51,6 +51,7 @@
                                                     class="edit btn btn-warning me-2"
                                                     data-application-id="{{$application->id}}"
                                                 >Edit</button>
+                                                @dd(\Carbon\Carbon::parse($application->pivot->end_at) > \Carbon\Carbon::today())
                                                 @if (\Carbon\Carbon::parse($application->pivot->end_at) > \Carbon\Carbon::today())
                                                     <button type="submit" class="btn @if($application->pivot->active) btn-warning @else btn-success ms-1 @endif me-2 status" form="toggle-status-{{$application->id}}">
                                                         @if ($application->pivot->active)
