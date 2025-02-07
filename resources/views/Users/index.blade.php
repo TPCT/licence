@@ -8,27 +8,27 @@
                 <div class="card-header">{{ __('User') }}</div>
 
                 <div class="card-body">
-                    <div class="d-flex justify-content-end">
-                        <button class="btn btn-success" id="add_user">Add New Licence</button>
-                    </div>
+{{--                    <div class="d-flex justify-content-end">--}}
+{{--                        <button class="btn btn-success" id="add_user">Add New Licence</button>--}}
+{{--                    </div>--}}
                     <div class="d-flex flex-column p-2">
                         @foreach($users as $user)
                             <div class="p-2 bg-light row shadow-sm rounded-3 border-bottom mb-2">
                                 <div class="col d-flex justify-content-center align-items-center flex-column">
                                     <span class="text-center">{{$user->username}}</span>
-                                    <span class="text-center">{{$user->updated_at->toDateString()}}</span>
+                                    <span class="text-center">Logged: {{$user->updated_at->toDateString()}}</span>
                                 </div>
                                 <div class="d-flex flex-column col align-items-center justify-content-center">
                                     @if($user->active)
                                         <div class="d-flex align-items-center mb-2 flex-column">
                                             <span class="badge bg-success mb-2">
-                                                {{$user->servers->where('active', true)->count()}} Active Ips
-                                            </span>
-                                            <span class="badge bg-success mb-2">
                                                 {{$user->applications()->pluck("server_applications.application_id")->unique()->count() . " Active Applications"}}
                                             </span>
-                                            <span class="badge bg-danger mb-2">
-                                                {{$user->applications()->orderBy('server_applications.licence_date')->first()->pivot?->licence_date ?? "No Subscriptions"}}
+                                            <span class="badge bg-success mb-2">
+                                                {{$user->servers->where('active', true)->count()}} Active Devices
+                                            </span>
+                                            <span class="badge bg-warning mb-2">
+                                                {{$user->applications()->where('active', 1)->orderBy('server_applications.end_date')->first()->pivot->end_date ?? "No Subscriptions"}}
                                             </span>
                                         </div>
                                     @else

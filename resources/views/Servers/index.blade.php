@@ -8,10 +8,10 @@
                     <div class="card-header">{{ __('IPS') }}</div>
 
                     <div class="card-body">
-                        <div class="d-flex justify-content-end">
-                            <a class="btn btn-warning me-2" href="{{route('licence-users.index')}}">Back</a>
-                            <button class="btn btn-success" id="add_ip">Add New IP</button>
-                        </div>
+{{--                        <div class="d-flex justify-content-end">--}}
+{{--                            <a class="btn btn-warning me-2" href="{{route('licence-users.index')}}">Back</a>--}}
+{{--                            <button class="btn btn-success" id="add_ip">Add New IP</button>--}}
+{{--                        </div>--}}
                         <div class="d-flex flex-column p-2">
                             @foreach($servers as $server)
                                 <div class="p-2 bg-light row shadow-sm rounded-3 border-bottom mb-2">
@@ -23,7 +23,7 @@
                                         @if($server->active)
                                             <div class="d-flex align-items-center flex-column">
                                                 <span class="badge bg-warning mb-2">
-                                                    {{$server->applications()->first()->pivot->licence_date ?? "No Active Subscriptions"}}
+                                                    {{$server->applications()->where('active', 1)->orderBy('pivot_end_date')->first()->pivot->end_date ?? "No Active Subscriptions"}}
                                                 </span>
                                                     <span class="badge bg-success">
                                                     {{$server->applications()->where('active', true)->count()}} Active Applications

@@ -8,10 +8,10 @@
                     <div class="card-header">{{ __('Applications') }}</div>
 
                     <div class="card-body">
-                        <div class="d-flex justify-content-end">
-                            <a class="btn btn-warning me-2" href="{{route('licence-users.show', ['licence_user' => $user->id, 'server' => $server->id])}}">Back</a>
-                            <button class="btn btn-success" id="add_application">Add New Application</button>
-                        </div>
+{{--                        <div class="d-flex justify-content-end">--}}
+{{--                            <a class="btn btn-warning me-2" href="{{route('licence-users.show', ['licence_user' => $user->id, 'server' => $server->id])}}">Back</a>--}}
+{{--                            <button class="btn btn-success" id="add_application">Add New Application</button>--}}
+{{--                        </div>--}}
                         <div class="d-flex flex-column p-2">
                             @foreach($applications as $application)
                                 <div class="p-2 bg-light row shadow-sm rounded-3 border-bottom mb-2">
@@ -21,8 +21,8 @@
                                     <div class="d-flex flex-column col align-items-center justify-content-center">
                                         @if($user->active)
                                             <div class="d-flex justify-content-center align-items-center flex-column">
-                                                <span class="badge bg-warning">{{\Carbon\Carbon::createFromFormat('Y-m-d H:i:s', $application->pivot->start_date)->toDateString()}} - {{\Carbon\Carbon::createFromFormat('Y-m-d H:i:s', $application->pivot->end_date)->toDateString()}}</span>
-                                                <span class="alert text-center alert-success p-1 mt-1">Remaining: {{\Carbon\Carbon::createFromFormat('Y-m-d H:i:s', $application->pivot->end_date)->diffInDays(\Carbon\Carbon::today())}} Days</span>
+                                                <span class="badge bg-warning">{{$application->pivot->start_date}} - {{$application->pivot->end_date}}</span>
+                                                <span class="alert text-center alert-success p-1 mt-1">Remaining: {{\Carbon\Carbon::parse($application->pivot->end_date)->diffInDays(\Carbon\Carbon::today())}} Days</span>
                                             </div>
                                         @else
                                             <div class="d-flex align-items-center mb-2">
@@ -47,15 +47,16 @@
                                                     class="edit btn btn-warning me-2"
                                                     data-application-id="{{$application->id}}"
                                                 >Edit</button>
-                                                <button type="submit"
-                                                        class="btn @if($application->pivot->active) btn-warning @else btn-success ms-1 @endif
-                                             me-2 status" form="toggle-status-{{$application->id}}">
-                                                    @if ($application->pivot->active)
-                                                        Disable
-                                                    @else
-                                                        Enable
-                                                    @endif
-                                                </button>
+                                                @if (\Carbon\Carbon::parse($application->pivot->end_at) > \Carbon\Carbon::today())
+                                                    <button type="submit"
+                                                            class="btn @if($application->pivot->active) btn-warning @else btn-success ms-1 @endif me-2 status" form="toggle-status-{{$application->id}}">
+                                                        @if ($application->pivot->active)
+                                                            Disable
+                                                        @else
+                                                            Enable
+                                                        @endif
+                                                    </button>
+                                                @endif
                                                 <button type="submit" class="btn btn-danger delete" form="delete-{{$application->id}}">
                                                     Delete
                                                 </button>

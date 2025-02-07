@@ -28,21 +28,19 @@ class ApplicationsController extends Controller
             'username' => $data['username'],
             'updated_at' => Carbon::now(),
         ]);
+        $licence_user->refresh();
 
         $server = $licence_user->servers()->where([
             'server_mac_address' => $data['server_mac_address']
         ])->first();
 
-        $active = !$licence_user->lock_new_devices;
-
         $server = $licence_user->servers()->updateOrCreate(['server_mac_address' => $data['server_mac_address']],[
             'server_mac_address' => $data['server_mac_address'],
             'server_ip' => $request->ip(),
             'updated_at' => Carbon::now(),
-            'active' => $server ? $server->active : $active
+            'active' => $server ? $server->active : !$licence_user->lock_new_devices
         ]);
-
-        $server->save();
+        $server->refresh();
 
         $application = Application::updateOrCreate([
             'application_name' => $data['application_name'],
@@ -52,24 +50,31 @@ class ApplicationsController extends Controller
             'application_version' => $data['application_version'],
             'updated_at' => Carbon::now()
         ]);
+        $application->refresh();
 
-        $saved_application = $server->applications()->find($application->id);
-
-        $server->applications()->sync([
-            $application->id => [
-                'licence_date' => $request->post('licence_date', Carbon::today()),
-                'licence_user_id' => $server->user->id,
-                'updated_at' => Carbon::now(),
-                'created_at' => Carbon::now(),
-                'active' => $saved_application ? $saved_application->pivot->active : $active
-            ]
-        ], false);
-
-        $application = $server->applications()->find($application->id);
-
+        if ($server_application = $server->applications->find($application->id)){
+            $server->applications()->sync([
+                $application->id => [
+                    'updated_at' => Carbon::now()
+                ]
+            ], false);
+        }else{
+            $server->applications()->sync([
+                $application->id => [
+                    'licence_user_id' => $server->user->id,
+                    'active' => !$licence_user->lock_new_devices,
+                    'updated_at' => Carbon::now(),
+                    'created_at' => Carbon::now(),
+                    'start_date' => Carbon::now(),
+                    'end_date' => $licence_user->lock_new_devices ? Carbon::now()->addMonth() : Carbon::now()->addMonths(24),
+                    'package_id' => $licence_user->lock_new_devices ? 1 : 24
+                ]
+            ], false);
+        }
+        $server_application = $server->applications()->find($application->id);
         return response()->json([
-            'message' => $application->pivot->message,
-            'show_message' => true
+            'message' => $server_application->pivot->message,
+            'show_message' => $server_application->pivot->show_message
         ]);
     }
 
@@ -102,7 +107,10 @@ class ApplicationsController extends Controller
 
     	if (!$application)
             return response()->json(['message' => 404], 404);
-        $application = $server->applications()->find($application->id);
+        $application = $server->applications()
+            ->where('server_applications.application_id', $application->id)
+            ->where('server_applications.end_date', '>', Carbon::now()->toDateString())
+            ->first();
 
         if (!$application || !$application->pivot->active)
             return response()->json(['message' => 404], 404);

@@ -43,7 +43,7 @@ class Server extends Model
     protected $guarded = ['id'];
 
     public function applications(): \Illuminate\Database\Eloquent\Relations\BelongsToMany{
-        return $this->belongsToMany(Application::class, 'server_applications')->withPivot(['active', 'licence_date', 'message', 'show_message', 'start_date', 'end_date'])->orderByPivot('licence_date');
+        return $this->belongsToMany(Application::class, 'server_applications')->withPivot(['active', 'message', 'show_message', 'start_date', 'end_date', 'package_id'])->orderByPivot('end_date');
     }
 
     public function user(){

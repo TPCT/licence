@@ -51,7 +51,12 @@ class LicenceApplicationsController extends Controller
         $server = $licence_user->servers()->findOrFail($server->id);
         $application = $server->applications()->findOrFail($application->id);
 
-        return view('Applications.edit', ['user' => $licence_user, 'server' => $server, 'application' => $application]);
+        return view('Applications.edit', [
+            'user' => $licence_user,
+            'server' => $server,
+            'application' => $application,
+            'packages' => Application::Packages()
+        ]);
     }
 
     public function update(Request $request, LicenceUser $licence_user, Server $server, Application $application){
@@ -61,12 +66,15 @@ class LicenceApplicationsController extends Controller
                 ->with('message', ['message' => "Application doesn't belong to the user", "type" => "danger"]);
 
         $data = $request->validate([
-            'start_date' => 'required|date|after_or_equal:today',
-            'end_date' => 'required|date|after:start_date'
+            'start_date' => 'required|date',
+            'package_id' => 'required|in:0,1,3,6,9,12,24',
+            'message' => 'required|string|max:255',
         ]);
 
-        $data['show_message'] = $data['show_message'] ?? false;
-
+        $data['end_date'] = Carbon::parse($data['start_date'])->addMonths(request('package_id'));
+        if ($data['package_id'] == 0)
+            $data['end_date'] = Carbon::parse($data['start_date'])->addDay();
+        $data['show_message'] = (bool)request('show_message');
         $application->pivot->update($data);
         $application->pivot->save();
 
